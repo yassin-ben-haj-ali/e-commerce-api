@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import rootRouter from "./routes";
 import { PrismaClient } from "@prisma/client";
+import { errorMiddleware } from "./middlewares/error";
 
 dotenv.config({ path: ".env" })
 
@@ -19,6 +20,8 @@ app.use("/api", rootRouter);
 export const prismaClient = new PrismaClient({
     log: ['query']
 })
+
+app.use(errorMiddleware);
 
 const PORT = process.env.PORT;
 
