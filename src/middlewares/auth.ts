@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UnothorizedException } from "../exceptions/unauthorized";
+import { UnauthorizedException } from "../exceptions/unauthorized";
 import { ErrorCode } from "../exceptions/root";
 import { verify } from "jsonwebtoken";
 import { prismaClient } from "..";
@@ -11,7 +11,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const token = req.headers.authorization
     // 2. if token is not present, throw an error of unauthorized 
     if (!token) {
-        next(new UnothorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
+        next(new UnauthorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
     }
     try {
         // 3.if the token is present, verify that token and extract the payload
@@ -19,7 +19,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         // 4.to get the user from the payload
         const user = await prismaClient.user.findFirst({ where: { id: payload.userId } })
         if (!user) {
-            next(new UnothorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
+            next(new UnauthorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
         }
         // 5.to attach the user to the current request object
         req.user = user
@@ -27,7 +27,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
 
     } catch (err) {
-        next(new UnothorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
+        next(new UnauthorizedException('Unauthorized', ErrorCode.UNAUTHORIZED))
     }
 
 
