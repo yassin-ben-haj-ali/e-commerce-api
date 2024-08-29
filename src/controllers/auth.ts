@@ -5,6 +5,7 @@ import { sign } from "jsonwebtoken"
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { UnprocessableEntity } from "../exceptions/validation";
+import { NotFoundException } from "../exceptions/not-found";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -39,10 +40,10 @@ export const login = async (req: Request, res: Response) => {
     let user = await prismaClient.user.findFirst({ where: { email } })
 
     if (!user) {
-        throw Error("User does not exists !")
+        throw new NotFoundException("User not found.", ErrorCode.USER_NOT_FOUND)
     }
     if (!compareSync(password, user.password)) {
-        throw Error("Incorrect Password !")
+        throw new BadRequestException("Incorrect Password", ErrorCode.INCORRECT_PASSWORD)
     }
 
     const token = sign({
@@ -52,5 +53,11 @@ export const login = async (req: Request, res: Response) => {
     )
 
     res.json({ user, token });
+
+}
+
+export const me = async (req: Request, res: Response) => {
+
+    res.json(req.user);
 
 }
