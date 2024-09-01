@@ -7,3 +7,12 @@ export const signupSchema = z.object({
     password: z.string().min(6)
 })
 
+
+export const adressSchema = z.object({
+    lineOne: z.string(),
+    lineTwo: z.string().nullable(),
+    city: z.string(),
+    country: z.string(),
+    pincode: z.string().length(6),
+    userId: z.number(),
+})
