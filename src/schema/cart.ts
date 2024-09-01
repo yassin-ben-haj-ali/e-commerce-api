@@ -7,6 +7,8 @@ export const CreateCartSchema = z.object({
 })
 
 
-
+export const ChangeQuantitySchema = z.object({
+    quantity: z.number()
+})
 
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateCartSchema } from "../schema/cart";
+import { ChangeQuantitySchema, CreateCartSchema } from "../schema/cart";
 import { Product } from "@prisma/client";
 import { prismaClient } from "..";
 import { NotFoundException } from "../exceptions/not-found";
@@ -59,6 +59,39 @@ export const deleteItemFromCart = async (req: Request, res: Response) => {
             id: +req.params.id
         }
     })
+}
 
+export const changeQuantity = async (req: Request, res: Response) => {
+    const validatedData = ChangeQuantitySchema.parse(req.body)
+    const cart = await prismaClient.cartItem.findFirst({
+        where: {
+            id: +req.params.id
+        }
+    })
+    if (cart.userId != req.user.id) {
+        throw new BadRequestException("User cannot update this item", ErrorCode.UNAUTHORIZED)
+    }
 
+    const updatedCart = await prismaClient.cartItem.update({
+        where: {
+            id: +req.params.id
+        },
+        data: {
+            quantity: validatedData.quantity
+        }
+    })
+    res.json(updatedCart)
+}
+
+export const getCart = async (req: Request, res: Response) => {
+
+    const cart = await prismaClient.cartItem.findMany({
+        where: {
+            userId: req.user.id
+        },
+        include: {
+            product: true
+        }
+    })
+    res.json(cart)
 }
