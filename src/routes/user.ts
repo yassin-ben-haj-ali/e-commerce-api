@@ -3,15 +3,17 @@ import { addAddress, deleteAddress, getAddresses } from "../controllers/users";
 import { errorHandler } from "../error-handler";
 import { authMiddleware } from "../middlewares/auth";
 
-const productRoutes: Router = Router();
+const userRoutes: Router = Router();
 
 
-productRoutes.post("/address",[authMiddleware],errorHandler(addAddress));
-productRoutes.get("/address",[authMiddleware],errorHandler(getAddresses));
-productRoutes.delete("/address/:id",[authMiddleware],errorHandler(deleteAddress));
+userRoutes.post("/address",[authMiddleware],errorHandler(addAddress));
+userRoutes.get("/address",[authMiddleware],errorHandler(getAddresses));
+userRoutes.delete("/address/:id",[authMiddleware],errorHandler(deleteAddress));
+userRoutes.put("/",[authMiddleware],errorHandler(deleteAddress));
 
 
 
 
 
-export default productRoutes;
+
+export default userRoutes;
